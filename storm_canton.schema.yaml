@@ -1,0 +1,132 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: storm_canton
+  name: 廣東拼音
+  version: "1.337.1"
+  author:
+    - Windham Wong <github.com/windhamwong>
+  description: |
+    廣東拼音 Storm-Rime 版
+  # dependencies:
+  #   - stroke
+
+menu:
+  page_size: 9 #選單每䈎顯示個數
+  page_down_cycle: true
+
+style:
+  font_face: "HanaMinA, HanaMinB" #字體〔小狼毫得且僅得設一個字體；鼠鬚管得設多個字體，後面的字體自動補前面字體不含的字〕
+  font_point: 15 #字號
+  horizontal: false #橫／直排
+  line_spacing: 1 #行距
+  inline_preedit: true #輸入碼內嵌
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 英文 ]
+  - name: full_shape
+    reset: 0
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ ，。, ，． ]
+  - name: simplification
+    states: [ 繁體, 简体 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - reverse_lookup_translator
+    - table_translator
+    - table_translator@stroke
+  filters:
+    - simplifier
+    - simplifier@emoji_suggestion
+    - uniquifier
+
+translator:
+  dictionary: storm_canton
+  enable_user_dict: false
+  enable_completion: false
+    
+speller:
+  delimiter: "'"
+  auto_select: false
+  use_space:  true
+  algebra:
+    - derive/ue$/oo/
+    - derive/uet$/oot/
+    - derive/ek$/et/
+
+key_binder:
+  import_preset: default
+  bindings:
+    - {accept: space, send: Page_Down, when: composing}
+    - {accept: "Control+1", toggle: full_shape, when: always}
+    - {accept: "Control+2", toggle: simplification, when: always}
+
+editor:
+  bindings:
+    space: toggle_selection
+
+punctuator:
+  full_shape:
+    " ": {commit: "　"}
+    "!": {commit: "！"}
+    "\"": {pair: ["“", "”"]}
+    "#": ["＃", "⌘"]
+    "$": ["￥", "$", "€", "£", "¥", "¢", "¤"]
+    "%": ["％", "°", "℃"]
+    "&": "＆"
+    "'": {pair: ["‘", "’"]}
+    "(": "（"
+    ")": "）"
+    "*": ["＊", "·", "・", "×", "※", "❂"]
+    "+": "＋"
+    ",": {commit: "，"}
+    "-": "－"
+    ".": {commit: "。"}
+    "/": ["／", "÷"]
+    ":": {commit: "："}
+    ";": {commit: "；"}
+    "<": ["《", "〈", "«", "‹"]
+    "=": "＝"
+    ">": ["》", "〉", "»", "›"]
+    "?": {commit: "？"}
+    "@": ["＠", "☯"]
+    "[": ["「", "【", "〔", "［"]
+    "\\": ["、", "＼"]
+    "]": ["」", "】", "〕", "］"]
+    "^": {commit: "……"}
+    _: "——"
+    "`": "｀"
+    "{": ["『", "〖", "｛"]
+    "|": ["·", "｜", "§", "¦"]
+    "}": ["』", "〗", "｝"]
+    "~": "～"
+
+stroke:
+  tag: stroke
+  dictionary: stroke
+  prefix: "x"
+  suffix: ";"
+  tips: 〔筆畫〕
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+
